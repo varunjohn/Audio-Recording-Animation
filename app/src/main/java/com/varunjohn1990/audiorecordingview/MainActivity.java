@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
     float lockOffset = 0;
     float dp = 0;
 
-    boolean isLocked = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
 
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP)
-                        stopRecording(true);
+                        stopRecording(false);
 
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
 
@@ -224,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void locked() {
         stopTrackingAction = true;
-        isLocked = true;
         stopRecording(false);
 
         Toast.makeText(this, "Locked", Toast.LENGTH_SHORT).show();
@@ -233,9 +230,11 @@ public class MainActivity extends AppCompatActivity {
     private void canceled() {
         stopTrackingAction = true;
         stopRecording(true);
+
+        Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
     }
 
-    private void stopRecording(boolean success) {
+    private void stopRecording(boolean performDeleteAnimation) {
         stopTrackingAction = true;
         firstX = 0;
         firstY = 0;
@@ -256,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
         timerTask.cancel();
 
-        if (!isLocked) {
+        if (performDeleteAnimation) {
             delete();
         } else {
             layoutMessage.setVisibility(View.VISIBLE);
@@ -265,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRecord() {
-        isLocked = false;
         stopTrackingAction = false;
         layoutMessage.setVisibility(View.GONE);
         attachment.setVisibility(View.INVISIBLE);
