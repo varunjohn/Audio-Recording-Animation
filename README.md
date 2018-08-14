@@ -9,12 +9,14 @@ GOODLUCK!!!
 
 
 ## About Me
-
 Varun John<br />
 Sr. Android Developer<br />
 varunjohn1990@gmail.com<br />
 Skype varun.john1990<br />
-Follow me on Instagram [varunjohn1990](https://www.instagram.com/varun.john.1990/)<br />
+Follow me https://github.com/varunjohn for other samples and libraries like these
+
+**If you like this sample then please add a star on this project :)**
+
 
 ## License
 ```
