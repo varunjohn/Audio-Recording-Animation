@@ -25,30 +25,34 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover;
-    View layoutDustin, layoutMessage, attachment;
-    TextView timeText;
-    View layoutSlideCancel;
-    View layoutLock;
+
+    private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover;
+    private View layoutDustin, layoutMessage, attachment;
+    private View layoutSlideCancel, layoutLock;
+    private TextView timeText;
+
     Animation animBlink, animJump, animJumpFast;
-    public boolean isDeleting;
-    public boolean stopTrackingAction;
-    public Handler handler;
+
+    private boolean isDeleting;
+    private boolean stopTrackingAction;
+    private Handler handler;
 
     private int audioTotalTime;
     private TimerTask timerTask;
     private Timer audioTimer;
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
 
-    float lastX = 0;
-    float lastY = 0;
-    float firstX = 0;
-    float firstY = 0;
+    private float lastX, lastY;
+    private float firstX, firstY;
 
-    float directionOffset = 0;
-    float cancelOffset = 0;
-    float lockOffset = 0;
-    float dp = 0;
+    private float directionOffset, cancelOffset, lockOffset;
+    private float dp = 0;
+
+    public enum RecordingBehaviour {
+        CANCELING,
+        LOCKING,
+        NONE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void attachments(View view) {
         Toast.makeText(this, "Add Attachments", Toast.LENGTH_SHORT).show();
-    }
-
-    public enum RecordingBehaviour {
-        CANCELING,
-        LOCKING,
-        NONE
     }
 
     public RecordingBehaviour recordingBehaviour = RecordingBehaviour.NONE;
