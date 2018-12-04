@@ -1,11 +1,67 @@
 # Audio-Recording-Animation
 WhatsApp like audio recording animations and views sample for Android.  
 
-![recording audio animaiton sample](https://user-images.githubusercontent.com/24667361/43940580-dfbe044e-9c8d-11e8-85ef-1363de046fd1.gif)
-
+![sample_audio_record](https://user-images.githubusercontent.com/24667361/49445368-c7733880-f7f7-11e8-8a18-ef07aa8b47bd.gif)
 
 Hold the mic and the timer will start (starts voice recording), now you can slide left to cancel or slide up to lock, release the mic to send (stops recording and sends the voice note). Although you have to write the code for recording audio and saving yourself. This sample will only give you the views and animations, perhaps the difficult part. 
 GOODLUCK!!!
+
+First need to add AudioRecordView in xml resource layout file.
+
+```
+<com.varunjohn1990.audiorecordingview.AudioRecordView
+        android:id="@+id/recordingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom" />
+```
+
+Now get the AudioRecordView in Activity and add the callback listeners.
+
+```
+audioRecordView = findViewById(R.id.recordingView);
+audioRecordView.setRecordingListener(new AudioRecordView.RecordingListener() {
+            @Override
+            public void onRecordingStarted() {
+            }
+
+            @Override
+            public void onRecordingLocked() {
+            }
+
+            @Override
+            public void onRecordingCompleted() {
+            }
+
+            @Override
+            public void onRecordingCanceled() {
+            }
+        });
+
+```
+
+You can get the required views from AudioRecordView.
+
+```
+audioRecordView.getMessageView();
+audioRecordView.getAttachmentView();
+audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg = audioRecordView.getMessageView().getText().toString();
+                audioRecordView.getMessageView().setText("");
+                messageAdapter.add(new Message(msg));
+            }
+        });
+```
+
+You can also change the image for the views.
+
+```
+audioRecordView.setAudioRecordButtonImage(R.drawable.record_audio_ic);
+audioRecordView.setSendButtonImage(R.drawable.send_msg_ic);
+
+```
 
 
 ## About Me
