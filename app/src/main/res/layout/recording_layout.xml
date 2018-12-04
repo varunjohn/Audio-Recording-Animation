@@ -79,6 +79,7 @@
         app:contentPadding="0dp">
 
         <ImageView
+            android:id="@+id/imageAudio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/record_audio_ic" />
@@ -104,6 +105,7 @@
         app:contentPadding="0dp">
 
         <ImageView
+            android:id="@+id/imageStop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/stop_record_ic" />
@@ -129,6 +131,7 @@
         app:contentPadding="0dp">
 
         <ImageView
+            android:id="@+id/imageSend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/send_msg_ic" />

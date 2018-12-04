@@ -1,44 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEFEF"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
+        android:orientation="vertical">
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewMessages"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            android:scrollbars="none" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="56dp"
-                    android:autoLink="all"
-                    android:gravity="center_horizontal"
-                    android:lineSpacingExtra="6dp"
-                    android:text="@string/app_info"
-                    android:textColorLink="@android:color/holo_blue_dark"
-                    android:textSize="16sp"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </ScrollView>
+    <com.varunjohn1990.audiorecordingview.AudioRecordView
+        android:id="@+id/recordingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom" />
 
-        <include
-            android:id="@+id/recordingLayout"
-            layout="@layout/recording_layout" />
-    </FrameLayout>
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

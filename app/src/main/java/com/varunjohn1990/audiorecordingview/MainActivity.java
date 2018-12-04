@@ -1,20 +1,21 @@
 package com.varunjohn1990.audiorecordingview;
 
-import android.animation.Animator;
-import android.os.Handler;
-import android.os.Looper;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,51 +23,89 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by Varun John on 4 Dec, 2018
+ * Github : https://github.com/varunjohn
+ */
+public class MainActivity extends AppCompatActivity implements AudioRecordView.RecordingListener {
 
-    private RecordViewHelper recordViewHelper;
+    private AudioRecordView audioRecordView;
+    private RecyclerView recyclerViewMessages;
+    private MessageAdapter messageAdapter;
+
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recordViewHelper = new RecordViewHelper(this, new RecordViewHelper.RecordingListener() {
-            @Override
-            public void onRecordingStarted() {
-                showToast("started");
-                debug("started");
-            }
+        audioRecordView = findViewById(R.id.recordingView);
+        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
 
-            @Override
-            public void onRecordingLocked() {
-                showToast("locked");
-                debug("locked");
-            }
+        audioRecordView.setRecordingListener(this);
 
-            @Override
-            public void onRecordingCompleted() {
-                showToast("completed");
-                debug("completed");
-            }
+        messageAdapter = new MessageAdapter();
 
-            @Override
-            public void onRecordingCanceled() {
-                showToast("canceled");
-                debug("canceled");
-            }
-        });
+        recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewMessages.setHasFixedSize(false);
 
-        recordViewHelper.getSendView().setOnClickListener(new View.OnClickListener() {
+        recyclerViewMessages.setAdapter(messageAdapter);
+        recyclerViewMessages.setItemAnimator(new DefaultItemAnimator());
+
+        setListener();
+    }
+
+    private void setListener() {
+
+        audioRecordView.getAttachmentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recordViewHelper.getMessageView().setText("");
-                showToast("Message Sent");
+                showToast("Attachment");
             }
         });
+
+        audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg = audioRecordView.getMessageView().getText().toString();
+                audioRecordView.getMessageView().setText("");
+                messageAdapter.add(new Message(msg));
+            }
+        });
+    }
+
+    @Override
+    public void onRecordingStarted() {
+        showToast("started");
+        debug("started");
+
+        time = System.currentTimeMillis() / (1000);
+    }
+
+    @Override
+    public void onRecordingLocked() {
+        showToast("locked");
+        debug("locked");
+    }
+
+    @Override
+    public void onRecordingCompleted() {
+        showToast("completed");
+        debug("completed");
+
+        int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
+
+        if (recordTime > 2) {
+            messageAdapter.add(new Message(recordTime));
+        }
+    }
+
+    @Override
+    public void onRecordingCanceled() {
+        showToast("canceled");
+        debug("canceled");
     }
 
     private void showToast(String message) {
@@ -77,4 +116,54 @@ public class MainActivity extends AppCompatActivity {
     private void debug(String log) {
         Log.d("VarunJohn", log);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.code:
+                showDialog();
+                break;
+        }
+        return true;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Created by:\nVarun John\nvarunjohn1990@gmail.com\n\nCheck code on Github :\nhttps://github.com/varunjohn/Audio-Recording-Animation")
+                .setCancelable(false)
+                .setPositiveButton("Github", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String url = "https://github.com/varunjohn/Audio-Recording-Animation";
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.setPackage("com.android.chrome");
+                        try {
+                            startActivity(i);
+                        } catch (ActivityNotFoundException e) {
+                            i.setPackage(null);
+                            try {
+                                startActivity(i);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
 }
