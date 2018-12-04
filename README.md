@@ -1,7 +1,8 @@
 # Audio-Recording-Animation
 WhatsApp like audio recording animations and views sample for Android.  
 
-![sample_audio_record](https://user-images.githubusercontent.com/24667361/49445368-c7733880-f7f7-11e8-8a18-ef07aa8b47bd.gif)
+![varunjohn-audio-record-code-sample](https://user-images.githubusercontent.com/24667361/49446780-f4751a80-f7fa-11e8-87cd-a6e2999fa841.gif)
+
 
 Hold the mic and the timer will start (starts voice recording), now you can slide left to cancel or slide up to lock, release the mic to send (stops recording and sends the voice note). Although you have to write the code for recording audio and saving yourself. This sample will only give you the views and animations, perhaps the difficult part. 
 GOODLUCK!!!
