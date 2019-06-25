@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        audioRecordView = findViewById(R.id.recordingView);
+        audioRecordView = new AudioRecordView();
+        audioRecordView.initView(findViewById(R.id.root));
+
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
 
         audioRecordView.setRecordingListener(this);
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
 
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
 
-        if (recordTime > 2) {
+        if (recordTime > 1) {
             messageAdapter.add(new Message(recordTime));
         }
     }

@@ -32,7 +32,7 @@ import java.util.TimerTask;
  * Created by Varun John on 4 Dec, 2018
  * Github : https://github.com/varunjohn
  */
-public class AudioRecordView extends FrameLayout {
+public class AudioRecordView {
 
     public enum UserBehaviour {
         CANCELING,
@@ -61,7 +61,7 @@ public class AudioRecordView extends FrameLayout {
 
     private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop, imageViewSend;
     private View layoutDustin, layoutMessage, imageViewAttachment, imageViewEmoji;
-    private View layoutSlideCancel, layoutLock;
+    private View layoutSlideCancel, layoutLock, layoutEffect1, layoutEffect2;
     private EditText editTextMessage;
     private TextView timeText;
 
@@ -91,32 +91,16 @@ public class AudioRecordView extends FrameLayout {
     boolean isLayoutDirectionRightToLeft;
     int screenWidth, screenHeight;
 
-    public AudioRecordView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initView();
-    }
 
-    public AudioRecordView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView();
-    }
-
-    public AudioRecordView(Context context) {
-        super(context);
-        initView();
-    }
-
-    private void initView() {
-        View view = inflate(getContext(), R.layout.recording_layout, null);
-        addView(view);
+    public void initView(View view) {
 
         timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        DisplayMetrics displayMetrics = view.getContext().getResources().getDisplayMetrics();
         screenHeight = displayMetrics.heightPixels;
         screenWidth = displayMetrics.widthPixels;
 
-        isLayoutDirectionRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
+        isLayoutDirectionRightToLeft = view.getContext().getResources().getBoolean(R.bool.is_right_to_left);
 
         imageViewAttachment = view.findViewById(R.id.imageViewAttachment);
         imageViewEmoji = view.findViewById(R.id.imageViewEmoji);
@@ -135,6 +119,8 @@ public class AudioRecordView extends FrameLayout {
         layoutMessage = view.findViewById(R.id.layoutMessage);
         timeText = view.findViewById(R.id.textViewTime);
         layoutSlideCancel = view.findViewById(R.id.layoutSlideCancel);
+        layoutEffect2 = view.findViewById(R.id.layoutEffect2);
+        layoutEffect1 = view.findViewById(R.id.layoutEffect1);
         layoutLock = view.findViewById(R.id.layoutLock);
         imageViewMic = view.findViewById(R.id.imageViewMic);
         dustin = view.findViewById(R.id.dustin);
@@ -142,13 +128,13 @@ public class AudioRecordView extends FrameLayout {
 
         handler = new Handler(Looper.getMainLooper());
 
-        dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getContext().getResources().getDisplayMetrics());
+        dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, view.getContext().getResources().getDisplayMetrics());
 
-        animBlink = AnimationUtils.loadAnimation(getContext(),
+        animBlink = AnimationUtils.loadAnimation(view.getContext(),
                 R.anim.blink);
-        animJump = AnimationUtils.loadAnimation(getContext(),
+        animJump = AnimationUtils.loadAnimation(view.getContext(),
                 R.anim.jump);
-        animJumpFast = AnimationUtils.loadAnimation(getContext(),
+        animJumpFast = AnimationUtils.loadAnimation(view.getContext(),
                 R.anim.jump_fast);
 
         setupRecording();
@@ -398,6 +384,8 @@ public class AudioRecordView extends FrameLayout {
             timeText.setVisibility(View.INVISIBLE);
             imageViewMic.setVisibility(View.INVISIBLE);
             imageViewStop.setVisibility(View.GONE);
+            layoutEffect2.setVisibility(View.GONE);
+            layoutEffect1.setVisibility(View.GONE);
 
             timerTask.cancel();
             delete();
@@ -409,10 +397,13 @@ public class AudioRecordView extends FrameLayout {
             timeText.clearAnimation();
             timeText.setVisibility(View.INVISIBLE);
             imageViewMic.setVisibility(View.INVISIBLE);
-            layoutMessage.setVisibility(View.VISIBLE);
+            editTextMessage.setVisibility(View.VISIBLE);
             imageViewAttachment.setVisibility(View.VISIBLE);
             imageViewEmoji.setVisibility(View.VISIBLE);
             imageViewStop.setVisibility(View.GONE);
+            editTextMessage.requestFocus();
+            layoutEffect2.setVisibility(View.GONE);
+            layoutEffect1.setVisibility(View.GONE);
 
             timerTask.cancel();
 
@@ -426,7 +417,7 @@ public class AudioRecordView extends FrameLayout {
             recordingListener.onRecordingStarted();
 
         stopTrackingAction = false;
-        layoutMessage.setVisibility(View.GONE);
+        editTextMessage.setVisibility(View.INVISIBLE);
         imageViewAttachment.setVisibility(View.INVISIBLE);
         imageViewEmoji.setVisibility(View.INVISIBLE);
         imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
@@ -434,6 +425,9 @@ public class AudioRecordView extends FrameLayout {
         layoutLock.setVisibility(View.VISIBLE);
         layoutSlideCancel.setVisibility(View.VISIBLE);
         imageViewMic.setVisibility(View.VISIBLE);
+        layoutEffect2.setVisibility(View.VISIBLE);
+        layoutEffect1.setVisibility(View.VISIBLE);
+
         timeText.startAnimation(animBlink);
         imageViewLockArrow.clearAnimation();
         imageViewLock.clearAnimation();
@@ -552,7 +546,8 @@ public class AudioRecordView extends FrameLayout {
 
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
-                                        layoutMessage.setVisibility(View.VISIBLE);
+                                        editTextMessage.setVisibility(View.VISIBLE);
+                                        editTextMessage.requestFocus();
                                     }
 
                                     @Override
