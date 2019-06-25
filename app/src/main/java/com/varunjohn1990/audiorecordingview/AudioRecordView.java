@@ -1,15 +1,13 @@
 package com.varunjohn1990.audiorecordingview;
 
 import android.animation.Animator;
-import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -63,7 +60,7 @@ public class AudioRecordView extends FrameLayout {
     }
 
     private View imageViewAudio, imageViewLockArrow, imageViewLock, imageViewMic, dustin, dustin_cover, imageViewStop, imageViewSend;
-    private View layoutDustin, layoutMessage, imageViewAttachment;
+    private View layoutDustin, layoutMessage, imageViewAttachment, imageViewEmoji;
     private View layoutSlideCancel, layoutLock;
     private EditText editTextMessage;
     private TextView timeText;
@@ -79,7 +76,7 @@ public class AudioRecordView extends FrameLayout {
     private int audioTotalTime;
     private TimerTask timerTask;
     private Timer audioTimer;
-    private SimpleDateFormat timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
+    private SimpleDateFormat timeFormatter;
 
     private float lastX, lastY;
     private float firstX, firstY;
@@ -90,6 +87,9 @@ public class AudioRecordView extends FrameLayout {
 
     private UserBehaviour userBehaviour = UserBehaviour.NONE;
     private RecordingListener recordingListener;
+
+    boolean isLayoutDirectionRightToLeft;
+    int screenWidth, screenHeight;
 
     public AudioRecordView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -110,7 +110,16 @@ public class AudioRecordView extends FrameLayout {
         View view = inflate(getContext(), R.layout.recording_layout, null);
         addView(view);
 
+        timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        screenHeight = displayMetrics.heightPixels;
+        screenWidth = displayMetrics.widthPixels;
+
+        isLayoutDirectionRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
+
         imageViewAttachment = view.findViewById(R.id.imageViewAttachment);
+        imageViewEmoji = view.findViewById(R.id.imageViewEmoji);
         editTextMessage = view.findViewById(R.id.editTextMessage);
 
         send = view.findViewById(R.id.imageSend);
@@ -170,7 +179,12 @@ public class AudioRecordView extends FrameLayout {
     }
 
     public View getAttachmentView() {
+
         return imageViewAttachment;
+    }
+
+    public View getEmojiView() {
+        return imageViewEmoji;
     }
 
     public EditText getMessageView() {
@@ -216,8 +230,8 @@ public class AudioRecordView extends FrameLayout {
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 
-                    cancelOffset = (float) (imageViewAudio.getX() / 2.8);
-                    lockOffset = (float) (imageViewAudio.getX() / 2.5);
+                    cancelOffset = (float) (screenWidth / 2.8);
+                    lockOffset = (float) (screenWidth / 2.5);
 
                     if (firstX == 0) {
                         firstX = motionEvent.getRawX();
@@ -247,18 +261,16 @@ public class AudioRecordView extends FrameLayout {
                     float motionX = Math.abs(firstX - motionEvent.getRawX());
                     float motionY = Math.abs(firstY - motionEvent.getRawY());
 
-                    if (motionX > directionOffset &&
-                            motionX > directionOffset &&
-                            lastX < firstX && lastY < firstY) {
+                    if (isLayoutDirectionRightToLeft ? (motionX > directionOffset && lastX > firstX && lastY > firstY) : (motionX > directionOffset && lastX < firstX && lastY < firstY)) {
 
-                        if (motionX > motionY && lastX < firstX) {
+                        if (isLayoutDirectionRightToLeft ? (motionX > motionY && lastX > firstX) : (motionX > motionY && lastX < firstX)) {
                             direction = UserBehaviour.CANCELING;
 
                         } else if (motionY > motionX && lastY < firstY) {
                             direction = UserBehaviour.LOCKING;
                         }
 
-                    } else if (motionX > motionY && motionX > directionOffset && lastX < firstX) {
+                    } else if (isLayoutDirectionRightToLeft ? (motionX > motionY && motionX > directionOffset && lastX > firstX) : (motionX > motionY && motionX > directionOffset && lastX < firstX)) {
                         direction = UserBehaviour.CANCELING;
                     } else if (motionY > motionX && motionY > directionOffset && lastY < firstY) {
                         direction = UserBehaviour.LOCKING;
@@ -316,7 +328,8 @@ public class AudioRecordView extends FrameLayout {
     }
 
     private void translateX(float x) {
-        if (x < -cancelOffset) {
+
+        if (isLayoutDirectionRightToLeft ? x > cancelOffset : x < -cancelOffset) {
             canceled();
             imageViewAudio.setTranslationX(0);
             layoutSlideCancel.setTranslationX(0);
@@ -398,6 +411,7 @@ public class AudioRecordView extends FrameLayout {
             imageViewMic.setVisibility(View.INVISIBLE);
             layoutMessage.setVisibility(View.VISIBLE);
             imageViewAttachment.setVisibility(View.VISIBLE);
+            imageViewEmoji.setVisibility(View.VISIBLE);
             imageViewStop.setVisibility(View.GONE);
 
             timerTask.cancel();
@@ -414,6 +428,7 @@ public class AudioRecordView extends FrameLayout {
         stopTrackingAction = false;
         layoutMessage.setVisibility(View.GONE);
         imageViewAttachment.setVisibility(View.INVISIBLE);
+        imageViewEmoji.setVisibility(View.INVISIBLE);
         imageViewAudio.animate().scaleXBy(1f).scaleYBy(1f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
         timeText.setVisibility(View.VISIBLE);
         layoutLock.setVisibility(View.VISIBLE);
@@ -459,6 +474,7 @@ public class AudioRecordView extends FrameLayout {
                 isDeleting = false;
                 imageViewAudio.setEnabled(true);
                 imageViewAttachment.setVisibility(View.VISIBLE);
+                imageViewEmoji.setVisibility(View.VISIBLE);
             }
         }, 1250);
 
@@ -466,8 +482,17 @@ public class AudioRecordView extends FrameLayout {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                dustin.setTranslationX(-dp * 40);
-                dustin_cover.setTranslationX(-dp * 40);
+
+                float displacement = 0;
+
+                if (isLayoutDirectionRightToLeft) {
+                    displacement = dp * 40;
+                } else {
+                    displacement = -dp * 40;
+                }
+
+                dustin.setTranslationX(displacement);
+                dustin_cover.setTranslationX(displacement);
 
                 dustin_cover.animate().translationX(0).rotation(-120).setDuration(350).setInterpolator(new DecelerateInterpolator()).start();
 
@@ -509,9 +534,17 @@ public class AudioRecordView extends FrameLayout {
                                 imageViewMic.setVisibility(View.INVISIBLE);
                                 imageViewMic.setRotation(0);
 
+                                float displacement = 0;
+
+                                if (isLayoutDirectionRightToLeft) {
+                                    displacement = dp * 40;
+                                } else {
+                                    displacement = -dp * 40;
+                                }
+
                                 dustin_cover.animate().rotation(0).setDuration(150).setStartDelay(50).start();
-                                dustin.animate().translationX(-dp * 40).setDuration(200).setStartDelay(250).setInterpolator(new DecelerateInterpolator()).start();
-                                dustin_cover.animate().translationX(-dp * 40).setDuration(200).setStartDelay(250).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
+                                dustin.animate().translationX(displacement).setDuration(200).setStartDelay(250).setInterpolator(new DecelerateInterpolator()).start();
+                                dustin_cover.animate().translationX(displacement).setDuration(200).setStartDelay(250).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
                                     @Override
                                     public void onAnimationStart(Animator animation) {
 

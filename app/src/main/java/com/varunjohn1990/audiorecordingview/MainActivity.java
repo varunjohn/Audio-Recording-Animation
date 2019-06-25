@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
         recyclerViewMessages.setItemAnimator(new DefaultItemAnimator());
 
         setListener();
+        audioRecordView.getMessageView().requestFocus();
     }
 
     private void setListener() {
@@ -63,6 +65,13 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
             @Override
             public void onClick(View v) {
                 showToast("Attachment");
+            }
+        });
+
+        audioRecordView.getEmojiView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Emoji");
             }
         });
 
@@ -110,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
 
     private void showToast(String message) {
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
