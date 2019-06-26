@@ -192,7 +192,7 @@ public class AudioRecordView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()) {
+                if (s.toString().trim().isEmpty()) {
                     if (imageViewSend.getVisibility() != View.GONE) {
                         imageViewSend.setVisibility(View.GONE);
                         imageViewSend.animate().scaleX(0f).scaleY(0f).setDuration(100).setInterpolator(new LinearInterpolator()).start();
