@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,24 +13,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import com.varunjohn1990.audio_record_view.AudioRecordView;
+import com.varunjohn1990.audio_record_view.AudioRecordingView;
 
-/**
- * Created by Varun John on 4 Dec, 2018
- * Github : https://github.com/varunjohn
- */
-public class MainActivity extends AppCompatActivity implements AudioRecordView.RecordingListener {
+public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener {
 
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
@@ -40,14 +36,16 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chatting);
+
+        getSupportActionBar().hide();
 
         audioRecordView = new AudioRecordView();
-        audioRecordView.initView(findViewById(R.id.root));
-
-        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
-
+        audioRecordView.initView((FrameLayout) findViewById(R.id.layoutMain));
+        View containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
         audioRecordView.setRecordingListener(this);
+
+        recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
 
         messageAdapter = new MessageAdapter();
 
@@ -59,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
 
         setListener();
         audioRecordView.getMessageView().requestFocus();
+
     }
 
     private void setListener() {
@@ -177,5 +176,4 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
         });
         builder.create().show();
     }
-
 }

@@ -9,9 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="stateAlwaysVisible">
+        <activity android:name="com.varunjohn1990.audiorecordingview.ChattingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
