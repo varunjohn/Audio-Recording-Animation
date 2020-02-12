@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.varunjohn1990.audio_record_view.AudioRecordView;
 import com.varunjohn1990.audio_record_view.AudioRecordingView;
 
-public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener {
+public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener, View.OnClickListener {
 
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
@@ -41,7 +41,9 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
         getSupportActionBar().hide();
 
         audioRecordView = new AudioRecordView();
+        // this is to make your layout the root of audio record view, root layout supposed to be empty..
         audioRecordView.initView((FrameLayout) findViewById(R.id.layoutMain));
+        // this is to provide the container layout to the audio record view..
         View containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
         audioRecordView.setRecordingListener(this);
 
@@ -57,6 +59,9 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
 
         setListener();
         audioRecordView.getMessageView().requestFocus();
+
+        containerView.findViewById(R.id.imageViewTitleIcon).setOnClickListener(this);
+        containerView.findViewById(R.id.imageViewMenu).setOnClickListener(this);
 
     }
 
@@ -129,20 +134,8 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.my_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.code:
-                showDialog();
-                break;
-        }
-        return true;
+    public void onClick(View view) {
+        showDialog();
     }
 
     private void showDialog() {
