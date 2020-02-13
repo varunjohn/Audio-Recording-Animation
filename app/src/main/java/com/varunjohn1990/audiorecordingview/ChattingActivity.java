@@ -60,28 +60,35 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
 
         audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), this);
 
+        audioRecordView.removeAttachmentOptionAnimation(false);
+
+//        audioRecordView.setShowAttachmentIcon(false);
+//        audioRecordView.setShowCameraIcon(false);
+//        audioRecordView.setShowEmojiIcon(false);
     }
 
     private void setListener() {
 
-//        audioRecordView.getAttachmentView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showToast("Attachment");
-//            }
-//        });
-
         audioRecordView.getEmojiView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Emoji");
+                audioRecordView.hideAttachmentOptionView();
+                showToast("Emoji Icon Clicked");
+            }
+        });
+
+        audioRecordView.getCameraView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioRecordView.hideAttachmentOptionView();
+                showToast("Camera Icon Clicked");
             }
         });
 
         audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = audioRecordView.getMessageView().getText().toString();
+                String msg = audioRecordView.getMessageView().getText().toString().trim();
                 audioRecordView.getMessageView().setText("");
                 messageAdapter.add(new Message(msg));
             }
@@ -171,6 +178,24 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
     public void onClick(AttachmentOption attachmentOption) {
         switch (attachmentOption.getId()) {
 
+            case AttachmentOption.DOCUMENT_ID:
+                showToast("Document Clicked");
+                break;
+            case AttachmentOption.CAMERA_ID:
+                showToast("Camera Clicked");
+                break;
+            case AttachmentOption.GALLERY_ID:
+                showToast("Gallery Clicked");
+                break;
+            case AttachmentOption.AUDIO_ID:
+                showToast("Audio Clicked");
+                break;
+            case AttachmentOption.LOCATION_ID:
+                showToast("Location Clicked");
+                break;
+            case AttachmentOption.CONTACT_ID:
+                showToast("Contact Clicked");
+                break;
         }
     }
 }
