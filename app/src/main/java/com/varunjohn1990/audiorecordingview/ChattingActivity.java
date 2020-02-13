@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,19 +12,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.varunjohn1990.audio_record_view.AttachmentOption;
+import com.varunjohn1990.audio_record_view.AttachmentOptionsListener;
 import com.varunjohn1990.audio_record_view.AudioRecordView;
-import com.varunjohn1990.audio_record_view.AudioRecordingView;
 
-public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener, View.OnClickListener {
+public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener {
 
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
@@ -63,16 +58,18 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
         containerView.findViewById(R.id.imageViewTitleIcon).setOnClickListener(this);
         containerView.findViewById(R.id.imageViewMenu).setOnClickListener(this);
 
+        audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), this);
+
     }
 
     private void setListener() {
 
-        audioRecordView.getAttachmentView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Attachment");
-            }
-        });
+//        audioRecordView.getAttachmentView().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showToast("Attachment");
+//            }
+//        });
 
         audioRecordView.getEmojiView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,5 +165,12 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
             }
         });
         builder.create().show();
+    }
+
+    @Override
+    public void onClick(AttachmentOption attachmentOption) {
+        switch (attachmentOption.getId()) {
+
+        }
     }
 }
