@@ -84,6 +84,8 @@ audioRecordView.setRecordingListener(new AudioRecordView.RecordingListener() {
 This gives the whatsapp like reveal animation when you click the attachment icon. 
 Pass the List<AttachOption> and AttachmentOptionsListener to udioRecordView.setAttachmentOptions(). You can use the Default attachment options, customize it or send a custom list. 
 
+**NOTE : Use not more then 6 attachment options.**
+
 ```
  audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), new AttachmentOptionsListener() {
             @Override
@@ -112,7 +114,7 @@ Pass the List<AttachOption> and AttachmentOptionsListener to udioRecordView.setA
             }
         });
 ```
-Make custom list like this
+Make a custom list like this. Use AttachmentOption model class just pass an id, option title and an icon drawable resource id in the constructor.
 
 ```
 List<AttachmentOption> attachmentOptions = new ArrayList<>();
@@ -123,8 +125,19 @@ attachmentOptions.add(new AttachmentOption(ADD_FILE_ID, "Add File", R.drawable.i
 ### All available options
 
 ```
+//Show AttachmentOptionView with reveal animation..
+audioRecordView.showAttachmentOptionView();
+
+//To hide AttachmentOptionView..
+audioRecordView.hideAttachmentOptionView();
+
 //To remove the attachment options icons animation..
 audioRecordView.removeAttachmentOptionAnimation(false);
+
+//To hide the options you don't want..
+audioRecordView.setShowAttachmentIcon(true);
+audioRecordView.setShowCameraIcon(false);
+audioRecordView.setShowEmojiIcon(true);
 
 audioRecordView.getMessageView();
 audioRecordView.getAttachmentView();
@@ -138,7 +151,7 @@ audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
         });
 ```
 
-You can also change the image for the views.
+You can also change the icons for the views like this.
 
 ```
 audioRecordView.setAudioRecordButtonImage(R.drawable.record_audio_ic);
