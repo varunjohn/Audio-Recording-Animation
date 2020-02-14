@@ -13,23 +13,54 @@ GOODLUCK!!!
 3. Multiline EditText view.
 4. RTL layout support.
 
+## Gradle dependency
 
-## Implementation
+Add this dependency in your app level build.gradle file
 
-First need to add AudioRecordView in xml resource layout file.
-
-```
-<com.varunjohn1990.audiorecordingview.AudioRecordView
-        android:id="@+id/recordingView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom" />
-```
-
-Now get the AudioRecordView in Activity and add the callback listeners.
+[ ![Download](https://api.bintray.com/packages/varunjohn1990/Maven/WhatsappMessengerView/images/download.svg) ](https://bintray.com/varunjohn1990/Maven/WhatsappMessengerView/_latestVersion)
 
 ```
-audioRecordView = findViewById(R.id.recordingView);
+implementation 'com.varunjohn1990.libraries:WhatsappMessengerView:2.0.0'
+```
+
+
+## How to use
+
+The chatting activity has to be empty and give the id
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAF6E3"
+    tools:context=".ChattingActivity">
+    
+</FrameLayout>
+```
+Intitial the AudioRecordView with the root layout. Pass the view to audioRecordView.initView(view) method. 
+Also make the seperate container layout for the chatting activity which will contain the recycle view, or design however you like. Then set the layout with audioRecordView.setContainerView(layoutResourceId) method, the method will return the containerView.
+
+```
+audioRecordView = new AudioRecordView();
+
+// this is to make your layout the root of audio record view, root layout supposed to be empty..
+audioRecordView.initView((FrameLayout) findViewById(R.id.layoutMain));
+// this is to provide the container layout to the audio record view..
+View containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
+recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
+```
+
+Now get set the Recording callback listeners. It provides the callback methods on the basis of user interactions.
+So, in onRecordingStarted method you can start recording audio with the help of MediaRecorder class and
+in onRecordingCompleted method call you can stop and save the audio file.
+in onRecordingCanceled method you can delete the audio file.
+Just use whatever suits the requirements.
+
+```
 audioRecordView.setRecordingListener(new AudioRecordView.RecordingListener() {
             @Override
             public void onRecordingStarted() {
@@ -46,13 +77,55 @@ audioRecordView.setRecordingListener(new AudioRecordView.RecordingListener() {
             @Override
             public void onRecordingCanceled() {
             }
+});
+```
+### Attachment Options
+
+This gives the whatsapp like reveal animation when you click the attachment icon. 
+Pass the List<AttachOption> and AttachmentOptionsListener to udioRecordView.setAttachmentOptions(). You can use the Default attachment options, customize it or send a custom list. 
+
+```
+ audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), new AttachmentOptionsListener() {
+            @Override
+            public void onClick(AttachmentOption attachmentOption) {
+                switch (attachmentOption.getId()) {
+
+                    case AttachmentOption.DOCUMENT_ID: //Ids for default Attachment Options
+                        showToast("Document Clicked");
+                        break;
+                    case AttachmentOption.CAMERA_ID:
+                        showToast("Camera Clicked");
+                        break;
+                    case AttachmentOption.GALLERY_ID:
+                        showToast("Gallery Clicked");
+                        break;
+                    case AttachmentOption.AUDIO_ID:
+                        showToast("Audio Clicked");
+                        break;
+                    case AttachmentOption.LOCATION_ID:
+                        showToast("Location Clicked");
+                        break;
+                    case AttachmentOption.CONTACT_ID:
+                        showToast("Contact Clicked");
+                        break;
+                }
+            }
         });
+```
+Make custom list like this
 
 ```
+List<AttachmentOption> attachmentOptions = new ArrayList<>();
+attachmentOptions.add(new AttachmentOption(ADD_FILE_ID, "Add File", R.drawable.ic_add_file));
+```
 
-You can get the required views from AudioRecordView.
+
+### All available options
 
 ```
+//To remove the attachment options icons animation..
+audioRecordView.removeAttachmentOptionAnimation(false);
+
 audioRecordView.getMessageView();
 audioRecordView.getAttachmentView();
 audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
