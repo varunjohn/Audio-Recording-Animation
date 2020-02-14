@@ -139,6 +139,9 @@ audioRecordView.setShowAttachmentIcon(true);
 audioRecordView.setShowCameraIcon(false);
 audioRecordView.setShowEmojiIcon(true);
 
+//To change the text SlideToCancel
+audioRecordView.changeSlideToCancelText(int textResourceId);
+
 audioRecordView.getMessageView();
 audioRecordView.getAttachmentView();
 audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
