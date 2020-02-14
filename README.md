@@ -23,10 +23,11 @@ Add this dependency in your app level build.gradle file
 implementation 'com.varunjohn1990.libraries:WhatsappMessengerView:2.0.0'
 ```
 
-
 ## How to use
 
-The chatting activity has to be empty and give the id
+**NOTE: Check the sample app project code**
+
+The chatting activity layout file has to be empty with just a ViewGroup and give it an id.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -41,8 +42,7 @@ The chatting activity has to be empty and give the id
     
 </FrameLayout>
 ```
-Intitial the AudioRecordView with the root layout. Pass the view to audioRecordView.initView(view) method. 
-Also make the seperate container layout for the chatting activity which will contain the recycle view, or design however you like. Then set the layout with audioRecordView.setContainerView(layoutResourceId) method, the method will return the containerView.
+Intitial the AudioRecordView with the root layout of the chatting activity. Pass the view to audioRecordView.initView(view) method. Also make a seperate container layout for the chatting activity which will contain the recycle view, or design however you like. Then set the layout resource id with audioRecordView.setContainerView(layoutResourceId) method, the method will return its containerView.
 
 ```
 audioRecordView = new AudioRecordView();
@@ -81,8 +81,8 @@ audioRecordView.setRecordingListener(new AudioRecordView.RecordingListener() {
 ```
 ### Attachment Options
 
-This gives the whatsapp like reveal animation when you click the attachment icon. 
-Pass the List<AttachOption> and AttachmentOptionsListener to udioRecordView.setAttachmentOptions(). You can use the Default attachment options, customize it or send a custom list. 
+This gives whatsapp like reveal animation when you click the attachment icon. 
+Pass the List<AttachOption> and AttachmentOptionsListener to audioRecordView.setAttachmentOptions(). You can use the Default attachment options, customize it or send a custom list. 
 
 **NOTE : Use not more then 6 attachment options.**
 
