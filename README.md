@@ -7,6 +7,15 @@ WhatsApp like audio recording animations and views sample for Android.
 Hold the mic and the timer will start (starts voice recording), now you can slide left to cancel or slide up to lock, release the mic to send (stops recording and sends the voice note). Although you have to write the code for recording audio and saving yourself. This sample will only give you the views and animations, perhaps the difficult part. 
 GOODLUCK!!!
 
+## What's New ?
+1. Attachment option with animation.
+2. Image icon for Emoji and Camera.
+3. Multiline EditText view.
+4. RTL layout support.
+
+
+## Implementation
+
 First need to add AudioRecordView in xml resource layout file.
 
 ```
