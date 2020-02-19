@@ -20,7 +20,13 @@ Add this dependency in your app level build.gradle file
 [ ![Download](https://api.bintray.com/packages/varunjohn1990/Maven/WhatsappMessengerView/images/download.svg) ](https://bintray.com/varunjohn1990/Maven/WhatsappMessengerView/_latestVersion)
 
 ```
-implementation 'com.varunjohn1990.libraries:WhatsappMessengerView:2.0.0'
+implementation 'com.varunjohn1990.libraries:WhatsappMessengerView:2.1.0'
+```
+Also add these dependencies
+
+```
+implementation 'androidx.appcompat:appcompat:1.1.0'
+implementation 'androidx.cardview:cardview:1.0.0'
 ```
 
 ## How to use
@@ -159,7 +165,6 @@ You can also change the icons for the views like this.
 ```
 audioRecordView.setAudioRecordButtonImage(R.drawable.record_audio_ic);
 audioRecordView.setSendButtonImage(R.drawable.send_msg_ic);
-
 ```
 
 
