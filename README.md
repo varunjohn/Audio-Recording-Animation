@@ -1,4 +1,4 @@
-# Audio-Recording-Animation (v2 Coming soon)
+# Audio-Recording-Animation
 WhatsApp like audio recording animations and views sample for Android.  
 
 ![varunjohn-audio-record-code-sample](https://user-images.githubusercontent.com/24667361/74533858-8f699880-4f58-11ea-9316-f7528368e201.gif)
