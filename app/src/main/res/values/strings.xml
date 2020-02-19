@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Audio Recording View</string>
-    <string name="slide_to_cancel">"Slide to cancel"</string>
     <string name="app_info">"A WhatsApp style audio recording view to send voice notes in chat.\nHold the Mic to record, then slide left to cancel or swipe up to Lock and record.\n\nCredit:\nVarun John\nhttps://github.com/varunjohn\nvarunjohn1990@gmail.com"</string>
 </resources>

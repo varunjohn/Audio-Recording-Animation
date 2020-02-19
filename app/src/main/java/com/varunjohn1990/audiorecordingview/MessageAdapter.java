@@ -1,12 +1,11 @@
 package com.varunjohn1990.audiorecordingview;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +21,11 @@ import java.util.TimeZone;
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Message> messages = new ArrayList<>();
-    private static SimpleDateFormat timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
+    private static SimpleDateFormat timeFormatter;
+
+    public MessageAdapter() {
+        timeFormatter = new SimpleDateFormat("m:ss", Locale.getDefault());
+    }
 
     public void add(Message message) {
         messages.add(message);

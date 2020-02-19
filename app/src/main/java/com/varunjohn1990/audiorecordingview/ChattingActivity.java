@@ -4,31 +4,24 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * Created by Varun John on 4 Dec, 2018
- * Github : https://github.com/varunjohn
- */
-public class MainActivity extends AppCompatActivity implements AudioRecordView.RecordingListener {
+import com.varunjohn1990.audio_record_view.AttachmentOption;
+import com.varunjohn1990.audio_record_view.AttachmentOptionsListener;
+import com.varunjohn1990.audio_record_view.AudioRecordView;
+
+public class ChattingActivity extends AppCompatActivity implements AudioRecordView.RecordingListener, View.OnClickListener, AttachmentOptionsListener {
 
     private AudioRecordView audioRecordView;
     private RecyclerView recyclerViewMessages;
@@ -39,12 +32,18 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chatting);
 
-        audioRecordView = findViewById(R.id.recordingView);
-        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
+        getSupportActionBar().hide();
 
+        audioRecordView = new AudioRecordView();
+        // this is to make your layout the root of audio record view, root layout supposed to be empty..
+        audioRecordView.initView((FrameLayout) findViewById(R.id.layoutMain));
+        // this is to provide the container layout to the audio record view..
+        View containerView = audioRecordView.setContainerView(R.layout.layout_chatting);
         audioRecordView.setRecordingListener(this);
+
+        recyclerViewMessages = containerView.findViewById(R.id.recyclerViewMessages);
 
         messageAdapter = new MessageAdapter();
 
@@ -55,21 +54,39 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
         recyclerViewMessages.setItemAnimator(new DefaultItemAnimator());
 
         setListener();
+        audioRecordView.getMessageView().requestFocus();
+
+        containerView.findViewById(R.id.imageViewTitleIcon).setOnClickListener(this);
+        containerView.findViewById(R.id.imageViewMenu).setOnClickListener(this);
+
+
+        audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), this);
+
+        audioRecordView.removeAttachmentOptionAnimation(false);
     }
 
     private void setListener() {
 
-        audioRecordView.getAttachmentView().setOnClickListener(new View.OnClickListener() {
+        audioRecordView.getEmojiView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Attachment");
+                audioRecordView.hideAttachmentOptionView();
+                showToast("Emoji Icon Clicked");
+            }
+        });
+
+        audioRecordView.getCameraView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioRecordView.hideAttachmentOptionView();
+                showToast("Camera Icon Clicked");
             }
         });
 
         audioRecordView.getSendView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = audioRecordView.getMessageView().getText().toString();
+                String msg = audioRecordView.getMessageView().getText().toString().trim();
                 audioRecordView.getMessageView().setText("");
                 messageAdapter.add(new Message(msg));
             }
@@ -97,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
 
         int recordTime = (int) ((System.currentTimeMillis() / (1000)) - time);
 
-        if (recordTime > 2) {
+        if (recordTime > 1) {
             messageAdapter.add(new Message(recordTime));
         }
     }
@@ -110,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
 
     private void showToast(String message) {
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
@@ -118,20 +136,8 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.my_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.code:
-                showDialog();
-                break;
-        }
-        return true;
+    public void onClick(View view) {
+        showDialog();
     }
 
     private void showDialog() {
@@ -166,4 +172,28 @@ public class MainActivity extends AppCompatActivity implements AudioRecordView.R
         builder.create().show();
     }
 
+    @Override
+    public void onClick(AttachmentOption attachmentOption) {
+        switch (attachmentOption.getId()) {
+
+            case AttachmentOption.DOCUMENT_ID:
+                showToast("Document Clicked");
+                break;
+            case AttachmentOption.CAMERA_ID:
+                showToast("Camera Clicked");
+                break;
+            case AttachmentOption.GALLERY_ID:
+                showToast("Gallery Clicked");
+                break;
+            case AttachmentOption.AUDIO_ID:
+                showToast("Audio Clicked");
+                break;
+            case AttachmentOption.LOCATION_ID:
+                showToast("Location Clicked");
+                break;
+            case AttachmentOption.CONTACT_ID:
+                showToast("Contact Clicked");
+                break;
+        }
+    }
 }
