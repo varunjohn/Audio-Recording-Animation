@@ -4,17 +4,18 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.varunjohn1990.audio_record_view.AttachmentOption;
 import com.varunjohn1990.audio_record_view.AttachmentOptionsListener;
@@ -58,13 +59,10 @@ public class ChattingActivity extends AppCompatActivity implements AudioRecordVi
         containerView.findViewById(R.id.imageViewTitleIcon).setOnClickListener(this);
         containerView.findViewById(R.id.imageViewMenu).setOnClickListener(this);
 
+
         audioRecordView.setAttachmentOptions(AttachmentOption.getDefaultList(), this);
 
         audioRecordView.removeAttachmentOptionAnimation(false);
-
-//        audioRecordView.setShowAttachmentIcon(false);
-//        audioRecordView.setShowCameraIcon(false);
-//        audioRecordView.setShowEmojiIcon(false);
     }
 
     private void setListener() {
