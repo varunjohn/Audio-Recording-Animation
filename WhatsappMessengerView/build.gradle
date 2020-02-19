@@ -1,0 +1,58 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    bintrayRepo = 'Maven'
+    bintrayName = 'WhatsappMessengerView'
+
+    publishedGroupId = 'com.varunjohn1990.libraries'
+    libraryName = 'WhatsappMessengerView'
+    artifact = 'WhatsappMessengerView'
+
+    libraryDescription = 'WhatsApp like audio recording animations and views Library for Android'
+
+    siteUrl = 'https://github.com/varunjohn/Audio-Recording-Animation'
+    gitUrl = 'https://github.com/varunjohn/Audio-Recording-Animation.git'
+
+    libraryVersion = '2.1.0'
+
+    developerId = 'varunjohn1990'
+    developerName = 'Varun John'
+    developerEmail = 'varunjohn1990@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion = '29.0.2'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+tasks.withType(Javadoc) {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
