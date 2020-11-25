@@ -393,6 +393,8 @@ public class AudioRecordView {
 
         viewContainer.removeAllViews();
         viewContainer.addView(view);
+        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         return view;
     }
 
